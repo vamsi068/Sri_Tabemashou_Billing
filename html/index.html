@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou | Billing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body>
+<header class="topbar">
+ <a class="brand" href="index.html"><img class="brand-logo" src="../assets/restaurant-logo.png" alt="Sri Tabemashou Restaurant"></a>
+ <label class="search"><span>⌕</span><input id="searchInput" placeholder="Search for dishes..." aria-label="Search for dishes..."></label>
+ <div class="order-modes" id="orderModes"><button class="mode active" data-mode="Dine In">♜ &nbsp; Dine In</button><button class="mode" data-mode="Takeaway">♧ &nbsp; Takeaway</button><button class="mode" data-mode="Delivery">♧ &nbsp; Delivery</button></div>
+ <div class="top-right"><button type="button" class="bell" aria-label="Notifications" aria-expanded="false">♧<i class="notification-count" hidden>0</i></button><div class="avatar">SK</div><button type="button" class="staff-trigger" aria-label="Open staff menu" aria-expanded="false"><b>Staff</b><span>⌄</span></button><div class="clock"><strong id="clock"></strong><small id="todayDate"></small></div></div>
+ </header>
+<aside class="sidebar"><nav id="mainNav">
+<a class="nav-link active" href="index.html"><span>🛒</span>Billing</a>
+<a class="nav-link" href="orders.html"><span>▤</span>Orders</a><a class="nav-link" href="tables.html"><span>♧</span>Tables</a>
+<a class="nav-link" href="menu.html"><span>◫</span>Menu</a><a class="nav-link" href="inventory.html"><span>▣</span>Inventory</a>
+<a class="nav-link" href="purchases.html"><span>♙</span>Purchases</a><a class="nav-link" href="reports.html"><span>▥</span>Reports</a>
+<a class="nav-link" href="customers.html"><span>♙</span>Customers</a><a class="nav-link" href="staff.html"><span>♧</span>Staff</a>
+<a class="nav-link" href="coupons.html"><span>◇</span>Coupons</a><a class="nav-link" href="settings.html"><span>⚙</span>Settings</a>
+</nav><div class="sidebar-footer">● <span>System Online</span></div></aside>
+<main class="workspace">
+<section class="catalog-panel"><div class="category-strip" id="categoryStrip"></div><div class="product-grid" id="productGrid"></div>
+<div class="bottom-panels"><section class="quick-panel"><h3>Quick Items</h3><div id="quickItems" class="quick-grid"></div></section>
+<section class="recent-panel"><h3>Recent Orders <a class="text-button" href="orders.html">View All</a></h3><div id="recentOrders"></div></section></div></section>
+<aside class="checkout-panel"><div class="table-select"><strong id="tableLabel">Table</strong><div id="tableButtons"></div><button class="next-table" id="nextTable">›</button></div>
+<div class="customer-fields"><label><span>♙</span><input id="customerName" placeholder="Customer Name"></label><label><span>♧</span><input id="customerMobile" placeholder="Mobile Number" inputmode="tel" maxlength="10"><button id="addCustomer" title="Add customer">♙+</button></label></div><div id="loyaltyNotice" class="loyalty-notice" hidden></div>
+<div class="cart-wrap"><div class="cart-heading"><span>Item</span><span>Qty</span><span>Price</span><span>Total</span><span></span></div><div id="cartItems" class="cart-items"></div>
+<div class="totals"><div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div><div class="discount-line"><span>Discount <button id="discountBtn">10%</button></span><strong id="discountAmount">-₹0.00</strong></div>
+<div><span>CGST (<span id="cgstRateLabel">2.5</span>%)</span><strong id="cgst">₹0.00</strong></div><div><span>SGST (<span id="sgstRateLabel">2.5</span>%)</span><strong id="sgst">₹0.00</strong></div><div class="grand-total"><strong>Total Amount</strong><strong id="grandTotal">₹0.00</strong></div></div></div>
+<div class="checkout-actions"><button id="clearCart" class="action clear">▤<b>Clear Cart</b></button><button id="printKot" class="action kot">▣<b>KOT Print</b></button><button id="saveBill" class="action save">▤<b>Print &amp; Save Bill</b></button><button id="whatsAppBill" class="action whatsapp" type="button" title="Open the customer chat with this bill prepared">◉<b>WhatsApp Bill</b></button></div></aside>
+</main><div id="toast" class="toast"></div>
+<script src="../js/common.js"></script><script src="../js/billing.js"></script></body></html>

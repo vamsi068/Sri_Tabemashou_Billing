@@ -1,0 +1,5 @@
+Sri Tabemashou POS - Full Image Display Fix
+
+Updated style.css so product photos on Billing and Menu Management use object-fit: contain instead of cover. This displays the entire supplied food image without cropping its edges. The image area has a clean white background; image proportions are preserved.
+
+Run game/index.html using Live Server. If an old stylesheet remains cached, hard refresh with Ctrl+Shift+R.

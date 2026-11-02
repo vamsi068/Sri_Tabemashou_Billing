@@ -1,0 +1,51 @@
+function renderSettings(){
+ const s=store.settings||{};
+ $('pageContent').innerHTML=`
+ <div class="page-heading"><div><h1>Application Settings</h1><p>Manage restaurant details, billing, menu layout and preferences here. Changes apply across the POS.</p></div><button class="secondary-btn" id="backup">Download Backup</button></div>
+ <form id="settingsForm">
+ <section class="data-card"><h2>Restaurant & Receipt</h2><div class="settings-grid">
+ <label>Restaurant name<input name="restaurant" value="${escapeReceipt(s.restaurant||'Sri Tabemashou')}" required></label>
+ <label>Restaurant phone<input name="phone" value="${escapeReceipt(s.phone||'')}" placeholder="Phone number"></label>
+ <label>Address<input name="address" value="${escapeReceipt(s.address||'')}" placeholder="Full restaurant address"></label>
+ <label>Email<input name="email" type="email" value="${escapeReceipt(s.email||'')}"></label>
+ <label>GSTIN<input name="gstin" value="${escapeReceipt(s.gstin||'')}"></label>
+ <label>FSSAI licence<input name="fssai" value="${escapeReceipt(s.fssai||'')}"></label>
+ <label>Receipt footer<input name="footer" value="${escapeReceipt(s.footer||'Thank You...!!! Visit Again...!!!')}"></label>
+ <label>Receipt paper width<select name="receiptWidth"><option value="58" ${String(s.receiptWidth||80)==='58'?'selected':''}>58 mm</option><option value="80" ${String(s.receiptWidth||80)==='80'?'selected':''}>80 mm</option></select></label>
+ </div></section>
+ <section class="data-card"><h2>Billing & Loyalty</h2><div class="settings-grid">
+ <label>CGST (%)<input name="cgst" type="number" min="0" max="100" step="0.1" value="${s.cgst??2.5}"></label>
+ <label>SGST (%)<input name="sgst" type="number" min="0" max="100" step="0.1" value="${s.sgst??2.5}"></label>
+ <label>Default discount (%)<input name="discountRate" type="number" min="0" max="100" step="1" value="${store.discountRate??10}"></label>
+ <label>Free item reward after orders<input name="loyaltyOrderThreshold" type="number" min="1" max="1000" step="1" value="${s.loyaltyOrderThreshold??10}"></label>
+ <label>Default order mode<select name="defaultOrderMode"><option ${(!s.defaultOrderMode||s.defaultOrderMode==='Dine In')?'selected':''}>Dine In</option><option ${s.defaultOrderMode==='Takeaway'?'selected':''}>Takeaway</option><option ${s.defaultOrderMode==='Delivery'?'selected':''}>Delivery</option></select></label>
+ <label>Currency<input value="Indian Rupee (₹)" disabled></label>
+ </div></section>
+ <section class="data-card"><h2>Menu Display & Appearance</h2><div class="settings-grid">
+ <label>Accent colour<input name="accentColor" type="color" value="${s.accentColor||'#ff6818'}"></label>
+ <label>Minimum menu card width (px)<input name="menuCardMinWidth" type="number" min="120" max="360" step="10" value="${s.menuCardMinWidth??170}"></label>
+ <label>Menu item image height (px)<input name="menuImageHeight" type="number" min="70" max="240" step="10" value="${s.menuImageHeight??130}"></label>
+ <label>Number of dine-in tables<input name="tableCount" type="number" min="1" max="100" step="1" value="${s.tableCount??5}"></label>
+ <label>Interface font size<select name="fontSize"><option value="13" ${String(s.fontSize||14)==='13'?'selected':''}>Compact</option><option value="14" ${String(s.fontSize||14)==='14'?'selected':''}>Normal</option><option value="15" ${String(s.fontSize||14)==='15'?'selected':''}>Large</option></select></label>
+ <label>Show system online indicator<select name="showSystemStatus"><option value="true" ${s.showSystemStatus!==false?'selected':''}>Show</option><option value="false" ${s.showSystemStatus===false?'selected':''}>Hide</option></select></label>
+ </div><p class="muted-note">Menu columns automatically adjust to the available screen width. Minimum card width controls how many fit on each row.</p></section>
+ <div class="settings-actions"><button class="primary-btn" type="submit">Save All Settings</button><button class="secondary-btn" type="button" id="resetAppearance">Reset appearance</button></div>
+ </form>
+ <section class="data-card"><h2>Data & Maintenance</h2><p>Download a backup before making major changes. Data is stored in this browser profile using IndexedDB and is not shared across devices unless Firebase is connected.</p><div class="form-row"><button id="backupSecondary" class="secondary-btn" type="button">Download JSON Backup</button><button id="resetDemo" class="danger-btn" type="button">Reset demo data</button></div></section>
+ <section class="data-card"><h2>Page Names & Headings</h2><p>Change common navigation labels and page headings without editing code.</p><div class="settings-grid">${['New Bill','Orders','Reports','Tables','Menu','Inventory','Purchases','Customers','Staff','Coupons','Settings'].map((label)=>`<label>${label} label<input data-label-key="${label}" value="${escapeReceipt((s.labelNames||{})[label]||label)}"></label>`).join('')}</div><button class="secondary-btn" type="button" id="saveLabels">Save Page Names</button></section>
+ <section class="data-card"><h2>Custom Sections & Tables</h2><p>Add a custom information section or simple table to a page. You can edit or remove it here later.</p><div class="settings-grid"><label>Section/table title<input id="customTitle" placeholder="e.g. Daily Specials"></label><label>Show on page<select id="customPage"><option value="index.html">New Bill</option><option value="orders.html">Orders</option><option value="tables.html">Tables</option><option value="menu.html">Menu</option><option value="inventory.html">Inventory</option><option value="purchases.html">Purchases</option><option value="reports.html">Reports</option><option value="customers.html">Customers</option><option value="staff.html">Staff</option><option value="coupons.html">Coupons</option></select></label><label>Section type<select id="customType"><option value="text">Text / note section</option><option value="table">Simple table</option></select></label><label>Text content or table columns (comma-separated)<input id="customContent" placeholder="For table: Item, Qty, Notes"></label><label>Table rows (one row per line, comma-separated)<textarea id="customRows" rows="3" placeholder="For table only: Soup, 2, Special"></textarea></label></div><div class="settings-actions"><button class="primary-btn" type="button" id="addCustomSection">＋ Add Section</button></div><div id="customSectionList"></div></section>
+ <section class="data-card"><h2>Quick Navigation</h2><div class="settings-links"><a href="index.html">New Bill</a><a href="orders.html">Orders</a><a href="tables.html">Tables</a><a href="menu.html">Menu</a><a href="inventory.html">Inventory</a><a href="purchases.html">Purchases</a><a href="reports.html">Reports</a><a href="customers.html">Customers</a><a href="staff.html">Staff</a><a href="coupons.html">Coupons</a></div></section>`;
+ renderCustomSectionList();
+}
+function renderCustomSectionList(){
+ const host=$('customSectionList');if(!host)return;const list=(store.settings.customSections||[]);
+ host.innerHTML=list.length?list.map((x,i)=>`<div class="custom-section-row"><div><strong>${escapeReceipt(x.title)}</strong><p>${escapeReceipt(x.page)} · ${x.type==='table'?'Table':'Text section'}</p></div><button type="button" class="danger-btn" data-remove-custom="${i}">Remove</button></div>`).join(''):'<p class="muted-note">No custom sections added yet.</p>';
+}
+function saveBackup(){persistState();downloadFile('sri-tabemashou-backup.json',JSON.stringify({store,products},null,2),'application/json')}
+document.addEventListener('submit',e=>{if(e.target.id!=='settingsForm')return;e.preventDefault();const d=Object.fromEntries(new FormData(e.target));store.settings={...store.settings,restaurant:d.restaurant,phone:d.phone,address:d.address,email:d.email,gstin:d.gstin,fssai:d.fssai,footer:d.footer,cgst:+d.cgst,sgst:+d.sgst,receiptWidth:+d.receiptWidth,loyaltyOrderThreshold:+d.loyaltyOrderThreshold,defaultOrderMode:d.defaultOrderMode,accentColor:d.accentColor,menuCardMinWidth:+d.menuCardMinWidth,menuImageHeight:+d.menuImageHeight,tableCount:+d.tableCount,fontSize:+d.fontSize,showSystemStatus:d.showSystemStatus==='true'};store.discountRate=+d.discountRate;const labelNames={...(store.settings.labelNames||{})};document.querySelectorAll('[data-label-key]').forEach(el=>labelNames[el.dataset.labelKey]=el.value.trim()||el.dataset.labelKey);store.settings.labelNames=labelNames;persistState();if(typeof applyAppSettings==='function')applyAppSettings();renderSettings();toast('All settings saved and applied');});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='backup'||b.id==='backupSecondary')saveBackup();
+ if(b.id==='saveLabels'){store.settings.labelNames={...(store.settings.labelNames||{})};document.querySelectorAll('[data-label-key]').forEach(el=>store.settings.labelNames[el.dataset.labelKey]=el.value.trim()||el.dataset.labelKey);persistState();applyAppSettings();toast('Page labels saved');}
+ if(b.id==='addCustomSection'){const title=$('customTitle').value.trim(),page=$('customPage').value,type=$('customType').value,content=$('customContent').value.trim(),rows=$('customRows').value.trim();if(!title){toast('Enter a section/table title');return}if(type==='table'&&!content){toast('Enter table column names separated by commas');return}const customSections=[...(store.settings.customSections||[]),{id:Date.now(),title,page,type,content,rows}];store.settings.customSections=customSections;persistState();$('customTitle').value='';$('customContent').value='';$('customRows').value='';renderCustomSectionList();toast('Custom section added');}
+ const remove=b.dataset.removeCustom;if(remove!==undefined){store.settings.customSections=(store.settings.customSections||[]).filter((_,i)=>i!==Number(remove));persistState();renderCustomSectionList();toast('Custom section removed');}
+if(b.id==='resetAppearance'){store.settings={...store.settings,accentColor:'#ff6818',menuCardMinWidth:170,menuImageHeight:130,fontSize:14,showSystemStatus:true};persistState();applyAppSettings();renderSettings();toast('Appearance reset');}if(b.id==='resetDemo'&&confirm('Reset all saved demo data in this browser? This cannot be undone.')){indexedDB.deleteDatabase('SriTabemashouPOS');location.reload()}});
+renderSettings();window.addEventListener('pos-state-restored',renderSettings);
